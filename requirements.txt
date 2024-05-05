@@ -1,0 +1,7 @@
+flask
+numpy
+librosa
+keras
+keras.models
+flask_cors
+wave

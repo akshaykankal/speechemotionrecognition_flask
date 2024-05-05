@@ -1,0 +1,8 @@
+1. Train.py
+Test loss: 0.5689591765403748
+Test accuracy: 0.800000011920929
+
+2. ICO
+Test accuracy: 0.870063694267516
+
+3. Paper

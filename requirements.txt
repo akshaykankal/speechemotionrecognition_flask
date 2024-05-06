@@ -6,3 +6,4 @@ keras.models
 flask_cors
 wave
 tensorflow
+resampy

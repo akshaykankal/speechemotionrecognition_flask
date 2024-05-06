@@ -9,8 +9,9 @@ import wave
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+# CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
+CORS(app)  # Enable CORS for all routes
 
 # Load the trained model
 model = load_model('ICO_model.h5')

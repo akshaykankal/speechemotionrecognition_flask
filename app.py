@@ -74,4 +74,5 @@ def predict_emotion():
     return jsonify({'success': True, 'emotion': predicted_emotion})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Run the Flask app on host 0.0.0.0 and port 10000
+    app.run(host='0.0.0.0', port=10000)

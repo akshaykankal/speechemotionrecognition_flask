@@ -13,6 +13,18 @@ app = Flask(__name__)
 
 CORS(app)  # Enable CORS for all routes
 
+def extract_emotion_from_filename(filename):
+    filename = filename.lower()
+    if 'happy' in filename:
+        return 'happy'
+    elif 'sadness' in filename:
+        return 'sadness'
+    elif 'anger' in filename:
+        return 'anger'
+    elif 'neutral' in filename:
+        return 'neutral'
+    else:
+        return None
 # Load the trained model
 model = load_model('ICO_model.h5')
 
@@ -49,12 +61,20 @@ def predict_emotion():
     # If the user does not select a file, the browser may send an empty file without a filename
     if file.filename == '':
         return jsonify({'success': False, 'error': 'No selected file'})
-    
+    real_emotion = "None"   
+    # Extract emotion from the filename
+    real_emotion = extract_emotion_from_filename(file.filename)
+
+    if real_emotion is None:
+        real_emotion = emotion
+
     # Save the uploaded file to a temporary location with WAV format
-    temp_dir = "./"
-    temp_file_path = os.path.join(temp_dir, f"{emotion}_{datetime.now().strftime('%Y%m%d%H%M%S')}.wav")
+    temp_dir = "./dataset/Dataset/"
+    temp_file_path = os.path.join(temp_dir, f"{emotion}/{emotion}_{datetime.now().strftime('%Y%m%d%H%M%S')}.wav")
+    
     
     if file.filename.lower().endswith('.wav'):
+        
         file.save(temp_file_path)
     else:
         with wave.open(temp_file_path, 'wb') as wf:
@@ -64,15 +84,20 @@ def predict_emotion():
             wf.writeframes(file.read())
     
     # Extract features from the audio file
-    features = extract_features(temp_file_path)
+    try:
+        features = extract_features(temp_file_path)
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Error extracting features: {str(e)}'})
 
     # Make prediction
-    prediction = model.predict(np.expand_dims(features, axis=0))
-    emotion_labels = ['happy', 'anger', 'sadness', 'neutral']
-    predicted_emotion = emotion_labels[np.argmax(prediction)]
-
-
-    return jsonify({'success': True, 'emotion': predicted_emotion})
+    try:
+        prediction = model.predict(np.expand_dims(features, axis=0))
+        emotion_labels = ['happy', 'anger', 'sadness', 'neutral']
+        predicted_emotion = emotion_labels[np.argmax(prediction)]
+        
+        return jsonify({'success': True, 'predicted_emotion': predicted_emotion, 'real_emotion': real_emotion})
+    except Exception as e:
+        return jsonify({'success': False, 'error': f'Error making prediction: {str(e)}'})
 
 if __name__ == '__main__':
     # Run the Flask app on host 0.0.0.0 and port 10000

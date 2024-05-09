@@ -69,7 +69,7 @@ def predict_emotion():
         real_emotion = emotion
 
     # Save the uploaded file to a temporary location with WAV format
-    temp_dir = "./dataset/Dataset/"
+    temp_dir = "/dataset/Dataset/"
     temp_file_path = os.path.join(temp_dir, f"{emotion}/{emotion}_{datetime.now().strftime('%Y%m%d%H%M%S')}.wav")
     
     

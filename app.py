@@ -69,12 +69,12 @@ def predict_emotion():
         real_emotion = emotion
 
     # Save the uploaded file to a temporary location with WAV format
-    temp_dir = "/dataset/Dataset/"
+    temp_dir = "./dataset/Dataset"
+    if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
     temp_file_path = os.path.join(temp_dir, f"{emotion}/{emotion}_{datetime.now().strftime('%Y%m%d%H%M%S')}.wav")
     
-    
     if file.filename.lower().endswith('.wav'):
-        
         file.save(temp_file_path)
     else:
         with wave.open(temp_file_path, 'wb') as wf:
